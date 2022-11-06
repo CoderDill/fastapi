@@ -1,9 +1,13 @@
 from fastapi import FastAPI
 from enum import Enum
 from typing import Union
+from pydantic import BaseModel
 
 app = FastAPI()
 
+class Agent(BaseModel):
+    name: str
+    description: Union[str, None] = None
 
 class AgentName(str, Enum):
     jett = "jett"
@@ -15,6 +19,10 @@ class AgentName(str, Enum):
 async def root():
     return {"message": "Hello World"}
 
+
+@app.post("/items/")
+async def createAgent(agent: Agent):
+    return agent
 
 @app.get("/agents/{agent_id}")
 async def agents(agent_id: AgentName):
